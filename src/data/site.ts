@@ -107,7 +107,7 @@ export const strengths = [
     title: "Tests y APIs con método",
     description:
       "Tests unitarios con Karma y Jasmine; pruebas y documentación de APIs con Postman y Swagger.",
-    proof: "Stack de aseguramiento que ya usas en producción.",
+    proof: "Pruebo lo que entrego y documento lo que otros van a usar.",
   },
 ] as const;
 
