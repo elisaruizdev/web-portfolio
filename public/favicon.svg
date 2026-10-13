@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff207d"/>
+      <stop offset=".45" stop-color="#a81b8e"/>
+      <stop offset=".75" stop-color="#6b0eae"/>
+      <stop offset="1" stop-color="#4479e9"/>
+    </linearGradient>
+    <linearGradient id="tube" x1="0" y1="16" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ffe8f4"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <g stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- sombra del tubo -->
+    <path d="M29 19.5H16V47.5H29M16 33.5H26.5M37 47.5V19.5H43a7 7 0 0 1 0 14H37M43 33.5L50 47.5" stroke="#4c0b9f" stroke-opacity=".55"/>
+    <!-- E -->
+    <path d="M29 18H16V46H29M16 32H26.5" stroke="url(#tube)"/>
+    <!-- R -->
+    <path d="M37 46V18H43a7 7 0 0 1 0 14H37M43 32L50 46" stroke="url(#tube)"/>
+  </g>
+</svg>
