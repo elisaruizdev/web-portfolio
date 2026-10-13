@@ -1036,9 +1036,9 @@ a:hover {
 
   .strength-showcase__intro {
     display: grid;
-    grid-template-columns: minmax(14rem, 0.85fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     column-gap: clamp(2rem, 4vw, 4rem);
-    align-items: end;
+    align-items: center;
   }
 
   .strength-showcase--scroll .todd-label {
@@ -1047,9 +1047,9 @@ a:hover {
   }
 
   .strength-showcase__title {
-    max-width: 16ch;
+    max-width: none;
     margin-top: 0.5rem;
-    font-size: clamp(2.75rem, 4vw, 4.15rem);
+    font-size: clamp(2.5rem, 3.6vw, 3.6rem);
   }
 
   .strength-showcase__about {
@@ -1060,7 +1060,7 @@ a:hover {
   }
 
   .strength-showcase__cards-stack {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
