@@ -95,19 +95,11 @@ export const strengths = [
     title: "IA como acelerador, no autopiloto",
     description:
       "Trabajo con Cursor, Claude Code y agentes de IA para prototipar y escribir código — y luego lo reviso línea a línea: lógica, edge cases, estilo del repo y si encaja en producción.",
-    proof: "Side projects y este portfolio: asistencia de IA, criterio y QA humanos.",
   },
   {
     title: "Casuísticas antes del merge",
     description:
       "Reviso flujos alternativos, datos inconsistentes y comportamiento responsive — no solo el camino feliz del diseño en Figma.",
-    proof: "Calidad y estabilidad en front para sector bancario y financiero.",
-  },
-  {
-    title: "Tests y APIs con método",
-    description:
-      "Tests unitarios con Karma y Jasmine; pruebas y documentación de APIs con Postman y Swagger.",
-    proof: "Pruebo lo que entrego y documento lo que otros van a usar.",
   },
 ] as const;
 
@@ -158,7 +150,7 @@ export const projects: Project[] = [
     title: "Psoas",
     description:
       "Plataforma para clínicas de fisioterapia: login y registro, área privada con dashboard, pacientes, sesiones, historial clínico y gestión de fisios.",
-    tags: ["Angular", "Angular Material", "SSR", "TypeScript"],
+    tags: ["Angular", "TypeScript", "Nest.js", "MySQL"],
     repo: "https://github.com/elisaruizdev/psoas",
     highlight:
       "Angular 20 con rutas lazy, guards de autenticación y métricas diarias (sesiones, pacientes activos).",

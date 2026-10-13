@@ -19,6 +19,9 @@ const LOGO_BY_TAG: Record<string, string> = {
   playwright: "/logos/playwright.svg",
   cursor: "/logos/cursor.svg",
   claude: "/logos/claude.svg",
+  "nest.js": "/logos/nestjs.svg",
+  nestjs: "/logos/nestjs.svg",
+  mysql: "/logos/mysql.svg",
 };
 
 function normalizeProjectTag(tag: string): string {

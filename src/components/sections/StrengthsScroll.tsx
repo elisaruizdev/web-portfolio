@@ -30,9 +30,6 @@ export function StrengthsScroll({ items, eyebrow, title, about }: StrengthsScrol
             <article key={item.title} className="todd-card strength-showcase__card">
               <h3 className="font-display font-extrabold text-lg sm:text-xl">{item.title}</h3>
               <p className="strength-showcase__card-body todd-muted leading-relaxed">{item.description}</p>
-              <p className="strength-showcase__card-proof pt-4 border-t border-border text-sm font-medium">
-                {item.proof}
-              </p>
             </article>
           ))}
         </div>

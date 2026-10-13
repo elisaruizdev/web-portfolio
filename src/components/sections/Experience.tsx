@@ -6,7 +6,7 @@ import { ExperienceTimeline } from "./ExperienceTimeline";
 
 export function Experience() {
   return (
-    <section id="experiencia" className="section-light section-bg-experience pb-2 sm:pb-4">
+    <section id="experiencia" className="section-light section-bg-experience pb-10 sm:pb-4">
       <div className="experience-bg" aria-hidden="true">
         <div className="experience-bg__viewport">
           <span className="experience-bg__aurora experience-bg__aurora--cyan" />
