@@ -4,6 +4,25 @@ export const GA_ID = import.meta.env.VITE_GA_ID ?? "G-R8P5M5Q76D";
 /** Solo se mide en producción, para que las visitas en localhost no ensucien los datos. */
 export const analyticsEnabled = import.meta.env.PROD && Boolean(GA_ID);
 
+/** Token del sitio en Cloudflare Web Analytics. Sin token, el beacon no se carga. */
+export const CF_BEACON_TOKEN =
+  import.meta.env.VITE_CF_BEACON_TOKEN ?? "1bb2f984067145c09a19568eb6d719c9";
+
+/**
+ * Cloudflare Web Analytics no usa cookies ni almacena datos en el navegador,
+ * así que se carga en producción sin esperar al consentimiento.
+ */
+export function loadCloudflareBeacon() {
+  if (!import.meta.env.PROD || !CF_BEACON_TOKEN) return;
+  if (document.querySelector("script[data-cf-beacon]")) return;
+
+  const script = document.createElement("script");
+  script.defer = true;
+  script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  script.dataset.cfBeacon = JSON.stringify({ token: CF_BEACON_TOKEN });
+  document.head.appendChild(script);
+}
+
 export type Consent = "granted" | "denied";
 
 const CONSENT_KEY = "analytics-consent";
