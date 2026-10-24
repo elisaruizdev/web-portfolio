@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { CvNavMenu } from "./CvNavMenu";
 import { CookieBanner, openCookieSettings } from "./CookieBanner";
 import { site } from "../data/site";
@@ -8,18 +8,13 @@ import { analyticsEnabled } from "../utils/analytics";
 
 
 const navLinks = [
-
-  { label: "Experiencia profesional", href: "/#experiencia" },
-
-  { label: "Proyectos", href: "/#proyectos" },
-
+  { label: "Servicios", href: "/servicios" },
+  { label: "Experiencia", href: "/experiencia" },
   { label: "Blog", href: "/blog" },
-
-  { label: "Contacto", href: "/#contacto" },
-
 ];
 
-
+/** Rutas que comparten el hero de la home: la elección y sus dos vistas */
+const landingPaths = new Set(["/", "/servicios", "/experiencia"]);
 
 function scrollToSection(id: string) {
   const target = document.getElementById(id);
@@ -33,11 +28,12 @@ function scrollToSection(id: string) {
 export function Layout() {
 
   const location = useLocation();
-  const navigate = useNavigate();
-  const scrollHomeAfterNav = useRef(false);
+  const previousPath = useRef(location.pathname);
 
-  const isHome = location.pathname === "/";
-  const [showHeaderBrand, setShowHeaderBrand] = useState(!isHome);
+  const isLanding = landingPaths.has(location.pathname);
+  // La cabecera (nombre, enlaces, CV y redes) es para recruiters: solo en su vista y en el blog
+  const showHeader = location.pathname === "/experiencia" || location.pathname.startsWith("/blog");
+  const [showHeaderBrand, setShowHeaderBrand] = useState(!isLanding);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -54,7 +50,7 @@ export function Layout() {
   }, [menuOpen]);
 
   useEffect(() => {
-    if (!isHome) {
+    if (!isLanding) {
       setShowHeaderBrand(true);
       return;
     }
@@ -66,62 +62,42 @@ export function Layout() {
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
-  }, [isHome]);
+  }, [isLanding]);
 
+  // Al cambiar de página se vuelve arriba; la elección del hero (state.keepScroll) mantiene
+  // la posición para que el contenido aparezca justo debajo
   useEffect(() => {
-    if (!isHome || !scrollHomeAfterNav.current) {
+    const changed = previousPath.current !== location.pathname;
+    previousPath.current = location.pathname;
+    const keepScroll = (location.state as { keepScroll?: boolean } | null)?.keepScroll;
+    if (!changed || location.hash || keepScroll) {
       return;
     }
-    scrollHomeAfterNav.current = false;
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [isHome, location.key]);
+    window.scrollTo({ top: 0, left: 0 });
+  }, [location.pathname, location.hash, location.state]);
 
   useEffect(() => {
-    if (!isHome || !location.hash) {
+    if (!isLanding || !location.hash) {
       return;
     }
     const frame = requestAnimationFrame(() => scrollToSection(location.hash.slice(1)));
     return () => cancelAnimationFrame(frame);
-  }, [isHome, location.hash, location.key]);
-
-  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    setMenuOpen(false);
-
-    if (!isHome || !href.startsWith("/#")) {
-      return;
-    }
-
-    event.preventDefault();
-    const hash = href.slice(1);
-    if (location.hash !== hash) {
-      navigate(href);
-    }
-    scrollToSection(hash.slice(1));
-  };
+  }, [isLanding, location.hash, location.key]);
 
   const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location.pathname !== "/" || location.hash) {
+      return;
+    }
     event.preventDefault();
-
-    if (isHome && !location.hash) {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (isHome && location.hash) {
-      navigate("/", { replace: true });
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      return;
-    }
-
-    scrollHomeAfterNav.current = true;
-    navigate("/");
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
   return (
     <div
-      className={`min-h-screen flex flex-col ${isHome ? "bg-transparent" : "bg-white"}`}
+      className={`min-h-screen flex flex-col ${isLanding ? "bg-transparent" : "bg-white"}${showHeader ? "" : " layout--no-header"}`}
     >
 
+      {showHeader && (
       <header className="site-header sticky top-0 z-50">
 
         <div className="todd-wrap-wide site-header__inner flex min-h-14 sm:min-h-[4.25rem] py-2 items-center justify-between gap-3 sm:gap-4">
@@ -129,7 +105,7 @@ export function Layout() {
           <Link
             to="/"
             onClick={handleBrandClick}
-            className={`site-brand shrink-0 ${isHome && !showHeaderBrand ? "site-brand--home-hero" : ""}`}
+            className={`site-brand shrink-0 ${isLanding && !showHeaderBrand ? "site-brand--home-hero" : ""}`}
           >
             <span className="site-brand__name">{site.name}</span>
             <span className="site-brand__role">{site.role}</span>
@@ -160,17 +136,7 @@ export function Layout() {
 
             {navLinks.map((link) => {
 
-              const active =
-
-                link.href === "/"
-
-                  ? isHome
-
-                  : link.href.startsWith("/#")
-
-                    ? isHome
-
-                    : location.pathname.startsWith(link.href);
+              const active = location.pathname.startsWith(link.href);
 
               return (
 
@@ -180,7 +146,7 @@ export function Layout() {
 
                   to={link.href}
 
-                  onClick={(event) => handleNavClick(event, link.href)}
+                  aria-current={active ? "page" : undefined}
 
                   className={`rounded-md px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold no-underline transition-colors shrink-0 ${
                     active ? "text-ink" : "text-muted hover:text-ink"
@@ -228,15 +194,16 @@ export function Layout() {
         </div>
 
       </header>
+      )}
 
-      <main className={`flex-1 ${isHome ? "bg-transparent" : "bg-white"}`}>
+      <main className={`flex-1 ${isLanding ? "bg-transparent" : "bg-white"}`}>
 
         <Outlet />
 
       </main>
 
       <footer
-        className={`site-footer py-10 text-center text-sm todd-muted ${isHome ? "bg-transparent" : ""}`}
+        className={`site-footer py-10 text-center text-sm todd-muted ${isLanding ? "bg-transparent" : ""}`}
       >
 
         <p className="todd-wrap-wide">

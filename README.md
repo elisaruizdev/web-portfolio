@@ -10,7 +10,7 @@ The site showcases my professional experience, personal projects, technical stre
 - **Experience & projects** — career timeline, daily tech stack and personal projects with screenshots shown inside a browser frame.
 - **Blog** — Markdown-based posts with their own routes (`/blog`, `/blog/:slug`).
 - **Downloadable CV** — a designed PDF plus an ATS-optimised PDF generated automatically at build time.
-- **SEO ready** — per-page meta tags, Open Graph, JSON-LD structured data, and auto-generated `sitemap.xml` and `robots.txt`.
+- **SEO ready** — every route is prerendered to static HTML at build time, with per-page meta tags, Open Graph image, JSON-LD structured data (Person, ProfessionalService, BlogPosting), and auto-generated `sitemap.xml` and `robots.txt`.
 - **Responsive and accessible** layout, from mobile to large desktop screens.
 
 ## Tech stack
@@ -56,7 +56,7 @@ VITE_SITE_URL=https://your-domain.com
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Starts the Vite development server on port 5180. |
-| `npm run build` | Generates the ATS CV, type-checks, builds the site and creates the SEO files. |
+| `npm run build` | Generates the ATS CV, type-checks, builds the site, prerenders every route to HTML and creates the SEO files. |
 | `npm run cv:ats` | Generates only the ATS-friendly CV PDF. |
 | `npm run preview` | Serves the production build locally. |
 
@@ -66,12 +66,13 @@ VITE_SITE_URL=https://your-domain.com
 ├── public/              # Static assets: CVs, logos, project screenshots, favicon
 ├── scripts/
 │   ├── generate-cv-ats.mjs    # Builds the ATS-friendly CV PDF
+│   ├── prerender.mjs          # Renders each route (src/entry-server.tsx) to static HTML in dist/
 │   └── generate-seo-files.mjs # Writes sitemap.xml and robots.txt into dist/
 └── src/
     ├── components/      # Reusable UI, 3D and animation components
     │   └── sections/    # Landing page sections (Hero, Experience, Projects, Contact…)
     ├── data/            # Site content: profile, experience, projects and blog posts
-    ├── pages/           # Home, Blog and Blog post pages
+    ├── pages/           # Home (hero + audience choice) with its Services and Experience views, Blog, Blog post and 404
     ├── seo/             # SEO configuration and JSON-LD helpers
     └── utils/           # Shared helpers
 ```
@@ -85,7 +86,9 @@ The site is deployed on **Netlify** using the configuration in [`netlify.toml`](
 - Build command: `npm run build`
 - Publish directory: `dist`
 
-Client-side routing is handled through `public/_redirects` (Netlify) and `vercel.json` (Vercel).
+Each route is served from its prerendered file (`servicios.html`, `blog/<slug>.html`…); unknown URLs get `404.html` with a real 404 status. On Vercel, `vercel.json` enables `cleanUrls` so `/servicios` maps to `servicios.html`. New routes must be added to `routes` in [`src/entry-server.tsx`](src/entry-server.tsx).
+
+The contact forms (`encargo` for clients, `recruiter` for recruiters) use **Netlify Forms**. They are declared as hidden static forms in [`index.html`](index.html) so Netlify can detect them at deploy time; their fields must match [`src/components/ContactForm.tsx`](src/components/ContactForm.tsx). Form detection and email notifications are enabled in the Netlify dashboard (Forms).
 
 ## Contact
 

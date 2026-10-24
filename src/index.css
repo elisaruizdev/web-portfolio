@@ -265,8 +265,23 @@ a:hover {
   color: var(--color-ink);
 }
 
+/* Opaco: tapa los halos animados del fondo de la landing solo en el hero */
 .section-bg-hero {
-  background: transparent;
+  position: relative;
+  z-index: 1;
+  background: var(--color-cream);
+}
+
+/* Fundido del blanco del hero hacia el fondo de color de la vista elegida */
+.section-bg-hero::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  background: linear-gradient(var(--color-cream), rgb(255 255 255 / 0));
+  pointer-events: none;
 }
 
 .section-bg-experience {
@@ -752,6 +767,11 @@ a:hover {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+/* Sin cabecera (home y vista de encargos): el hero ocupa toda la pantalla y los anclajes no dejan hueco */
+.layout--no-header {
+  --site-header-height: 0px;
 }
 
 .site-brand--home-hero {
@@ -1636,6 +1656,12 @@ a:hover {
 /* Rosa algo más profundo para que el texto blanco pase AA (≈4,8:1) */
 .section-dark .btn-primary {
   background: #e0006b;
+}
+
+/* `.section-light a` pisa el color del texto: blanco sobre el mismo rosa AA que en oscuro */
+.section-light .btn-primary {
+  background: #e0006b;
+  color: var(--color-ghost);
 }
 
 .section-dark .btn-secondary:hover {
@@ -3109,6 +3135,7 @@ a:hover {
 }
 
 .hero-speech__identity {
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3313,23 +3340,6 @@ a:hover {
   color: var(--color-ink);
 }
 
-.hero-speech__sub-lead {
-  display: block;
-  color: var(--color-ink);
-  font-weight: 400;
-}
-
-.hero-speech__sub-tags {
-  display: block;
-  margin-top: 0.35em;
-}
-
-@media (min-width: 640px) {
-  .hero-speech__sub-tags {
-    white-space: nowrap;
-  }
-}
-
 .hero-speech__sub-sep {
   font-weight: 700;
   color: var(--color-cta);
@@ -3338,6 +3348,300 @@ a:hover {
 .hero-speech__sub-tag {
   font-weight: 700;
   color: var(--color-burgundy);
+}
+
+/* Elección del hero: "Necesito una web" / "Soy recruiter" */
+.audience-choice {
+  width: min(100%, 44rem);
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.audience-choice__prompt {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.audience-choice__options {
+  display: grid;
+  gap: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .audience-choice__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.section-light .audience-choice__option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.1rem 1.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  text-align: left;
+  text-decoration: none;
+  box-shadow: 3px 4px 8px rgb(0 0 0 / 8%);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.section-light .audience-choice__option:hover {
+  border-color: #e0006b;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.section-light .audience-choice__option[aria-current="page"] {
+  border-color: #e0006b;
+  background: #e0006b;
+  color: var(--color-ghost);
+}
+
+.audience-choice__label {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.audience-choice__hint {
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.audience-choice__option[aria-current="page"] .audience-choice__hint {
+  color: rgb(255 255 255 / 0.88);
+}
+
+/* Con una vista elegida el hero deja de ocupar la pantalla y el contenido aparece debajo */
+.hero-speech--compact .hero-speech__fold {
+  min-height: 0;
+}
+
+.hero-speech--compact .hero-speech__stage {
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+/* Vista de recruiters: titular y stack */
+.recruiter-intro {
+  padding-top: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.recruiter-intro__title {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.recruiter-intro__tags {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.05rem, 2.25vw, 1.35rem);
+}
+
+/* Contacto: una sola tarjeta según la vista */
+.contact-path {
+  max-width: 38rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.04);
+}
+
+.contact-path__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.contact-path__actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.contact-path__actions--secondary {
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+}
+
+/* Que la cabecera fija no tape el inicio del formulario al saltar a #contacto */
+#contacto {
+  scroll-margin-top: var(--site-header-height);
+}
+
+/* Formulario de contacto (fondo oscuro) */
+.contact-form {
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.contact-form__row {
+  display: grid;
+  gap: 1.1rem;
+}
+
+@media (min-width: 640px) {
+  .contact-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.contact-form__field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.contact-form__field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.9);
+}
+
+.contact-form__optional {
+  font-weight: 400;
+  color: rgb(255 255 255 / 0.65);
+}
+
+.contact-form input:not([type="checkbox"]),
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.06);
+  color: #ffffff;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color-scheme: dark;
+}
+
+/* La lista desplegable la pinta el sistema (fondo claro en Windows): colores explícitos */
+.contact-form option {
+  background-color: #1d0b33;
+  color: #ffffff;
+}
+
+.contact-form option:disabled {
+  color: rgb(255 255 255 / 0.55);
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.contact-form ::placeholder {
+  color: rgb(255 255 255 / 0.5);
+}
+
+.contact-form input:focus-visible,
+.contact-form select:focus-visible,
+.contact-form textarea:focus-visible {
+  outline: 2px solid #ff8ad4;
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.contact-form__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.78);
+}
+
+.contact-form__consent input {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.15rem;
+  accent-color: #e0006b;
+}
+
+.contact-form__actions .btn-primary:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.contact-form__error {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ffb3d9;
+}
+
+.contact-form__done {
+  margin: 1.75rem 0 0;
+  padding: 1.1rem 1.25rem;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.08);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Trampa antispam: invisible para personas, la rellenan los bots */
+.contact-form__trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* /servicios */
+.services-reasons {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.services-reasons li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--color-muted);
+}
+
+.services-reasons li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--color-cta);
+}
+
+.services-cta {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 12px;
+  background: var(--color-pink);
+  text-align: center;
 }
 
 .hero-speech__actions {

@@ -4,12 +4,15 @@ import { Seo } from "../components/Seo";
 import { FadeIn } from "../components/FadeIn";
 import { getPostBySlug } from "../data/blog";
 import { blogPostJsonLd } from "../seo/jsonLd";
+import { NotFoundPage } from "./NotFoundPage";
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
     month: "long",
     year: "numeric",
+    // Fechas YYYY-MM-DD (medianoche UTC): mismo día en el prerender y en cualquier zona horaria
+    timeZone: "UTC",
   }).format(new Date(iso));
 }
 
@@ -18,20 +21,7 @@ export function BlogPostPage() {
   const post = slug ? getPostBySlug(slug) : undefined;
 
   if (!post) {
-    return (
-      <div className="section-light py-24 todd-wrap text-center">
-        <Seo
-          title="Artículo no encontrado"
-          description="La entrada del blog que buscas no existe."
-          path={slug ? `/blog/${slug}` : "/blog"}
-          noIndex
-        />
-        <p className="todd-muted">Artículo no encontrado.</p>
-        <Link to="/blog" className="mt-4 inline-block text-accent">
-          Volver al blog
-        </Link>
-      </div>
-    );
+    return <NotFoundPage />;
   }
 
   return (

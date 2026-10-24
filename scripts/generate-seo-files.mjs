@@ -65,6 +65,8 @@ function escapeXml(value) {
 function buildSitemap() {
   const urls = [
     { loc: `${siteUrl}/`, changefreq: "weekly", priority: "1.0" },
+    { loc: `${siteUrl}/servicios`, changefreq: "monthly", priority: "0.9" },
+    { loc: `${siteUrl}/experiencia`, changefreq: "monthly", priority: "0.9" },
     { loc: `${siteUrl}/blog`, changefreq: "weekly", priority: "0.9" },
     ...blogPosts.map((post) => ({
       loc: `${siteUrl}/blog/${post.slug}`,

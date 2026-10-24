@@ -181,9 +181,8 @@ function SectorChapter({
 export function ExperienceStory() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [stackEnabled, setStackEnabled] = useState(
-    () => typeof window !== "undefined" && window.innerWidth >= DESKTOP_MIN,
-  );
+  // false también en el navegador para que la hidratación coincida con el prerender; el efecto lo ajusta
+  const [stackEnabled, setStackEnabled] = useState(false);
   const [stackShown, setStackShown] = useState(false);
   const stackShownRef = useRef(false);
   const transformRef = useRef("translate3d(0,0,0)");

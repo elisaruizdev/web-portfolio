@@ -16,7 +16,10 @@ export const cvDownloads = {
 export const site = {
   name: "Elisa Ruiz",
   shortName: "Elisa",
-  role: "Front-End Developer",
+  /** Rol principal (h1, cabecera, title, JSON-LD) */
+  role: "Desarrolladora web",
+  /** Rol técnico para la vista de recruiters */
+  techRole: "Front-End Developer",
   yearsExperience: 4,
   location: "Madrid",
   email: "elisaruizortegadev@gmail.com",
@@ -87,6 +90,52 @@ export const hero = {
     "Software engineer con experiencia desde 2022 en proyectos bancarios y financieros. Angular, Vue, TypeScript y SCSS — con obsesión sana por los fallos que aparecen cuando nadie ha probado «el otro camino».",
 } as const;
 
+/** Elección del hero: cada opción es una vista con su propia URL */
+export const audienceChoice = {
+  intro: `En ${site.location}, con más de ${site.yearsExperience} años creando webs y aplicaciones.`,
+  prompt: "¿Qué te trae por aquí?",
+  client: {
+    label: "Necesito una web",
+    hint: "Webs para negocios, aplicaciones a medida o mejorar la que ya tienes.",
+    href: "/servicios",
+  },
+  recruiter: {
+    label: "Soy recruiter",
+    hint: `Experiencia, proyectos y CV como ${site.techRole}.`,
+    href: "/experiencia",
+  },
+} as const;
+
+/** Encargos freelance: vista /servicios */
+export const freelance = {
+  title: "¿Necesitas una web? Hablemos",
+  intro: `Soy ${site.name}, desarrolladora front-end en Madrid con más de ${site.yearsExperience} años creando webs y aplicaciones en producción para banca y fintech. Además de mi trabajo, acepto proyectos por encargo: cuéntame qué necesitas y vemos cómo hacerlo.`,
+  examples: [
+    {
+      title: "Una web para tu negocio",
+      description:
+        "Web corporativa o landing: rápida, adaptada a móvil y preparada para que te encuentren en Google.",
+    },
+    {
+      title: "Una aplicación a medida",
+      description:
+        "Áreas privadas con login, paneles de gestión o formularios con lógica propia.",
+    },
+    {
+      title: "Mejorar la web que ya tienes",
+      description:
+        "Rediseño, rendimiento, accesibilidad y corrección de errores, sin empezar de cero.",
+    },
+  ],
+  reasons: [
+    "Experiencia en producción: webs y backoffices para una financiera y un neobanco.",
+    "Accesibilidad de serie: la trabajo a diario y la verifico con pruebas automatizadas con Playwright.",
+    "Detalle antes de entregar: reviso los casos raros, no solo el camino feliz.",
+  ],
+  area: "Con base en Madrid. Trabajo con negocios de toda la Comunidad de Madrid, en persona o en remoto, y en remoto con el resto de España.",
+  mailSubject: "Proyecto web",
+} as const;
+
 export const about =
   "Desarrollo con Cursor, Claude Code y agentes de IA para iterar más rápido; reviso, pruebo y corrijo el código que generan antes de darlo por bueno. Sigo formándome y destaco por ser detallista y meticulosa, sobre todo al buscar posibles fallos y las distintas casuísticas de cada aplicación.";
 
@@ -144,9 +193,9 @@ export const projects: Project[] = [
     id: "psoas",
     category: "personal",
     images: [
-      "/projects/psoas-login.png",
-      "/projects/psoas-dashboard.png",
-      "/projects/psoas-ficha-paciente.png",
+      "/projects/psoas-login.webp",
+      "/projects/psoas-dashboard.webp",
+      "/projects/psoas-ficha-paciente.webp",
     ],
     imageAlt: "Psoas — pantallas de la plataforma",
     title: "Psoas",
@@ -161,11 +210,11 @@ export const projects: Project[] = [
     id: "trivial-desarrolladores",
     category: "personal",
     images: [
-      "/projects/trivial-desarrolladores-setup.png",
-      "/projects/trivial-desarrolladores-quiz.png",
-      "/projects/trivial-desarrolladores-own-questions.png",
+      "/projects/trivial-desarrolladores-setup.webp",
+      "/projects/trivial-desarrolladores-quiz.webp",
+      "/projects/trivial-desarrolladores-own-questions.webp",
     ],
-    mobileImage: "/projects/trivial-desarrolladores-mobile.png",
+    mobileImage: "/projects/trivial-desarrolladores-mobile.webp",
     imageAlt: "Trivial para desarrolladores — pantallas de la app",
     title: "Trivial de desarrolladores",
     description:

@@ -8,11 +8,17 @@ export const siteUrl = (
 export const site = {
   ...siteData,
   url: siteUrl,
-  defaultTitle: `${siteData.name} — ${siteData.role}`,
-  defaultDescription:
-    "Software engineer — obsesionada con los detalles que nadie ve hasta que fallan.",
+  defaultTitle: `${siteData.name} — ${siteData.role} en ${siteData.location}`,
+  defaultDescription: `Desarrolladora front-end con más de ${siteData.yearsExperience} años en banca y fintech. Diseño y desarrollo webs para negocios en Madrid. Angular, Vue y React.`,
   locale: "es_ES",
   language: "es",
+  /** Imagen para compartir en redes (1200×630, en /public) */
+  ogImage: {
+    path: "/og-image.png",
+    width: 1200,
+    height: 630,
+    alt: `${siteData.name} — ${siteData.role} en ${siteData.location}`,
+  },
 } as const;
 
 export function absoluteUrl(path: string): string {

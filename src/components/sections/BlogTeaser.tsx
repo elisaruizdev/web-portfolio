@@ -7,6 +7,8 @@ function formatDate(iso: string) {
     day: "numeric",
     month: "long",
     year: "numeric",
+    // Fechas YYYY-MM-DD (medianoche UTC): mismo día en el prerender y en cualquier zona horaria
+    timeZone: "UTC",
   }).format(new Date(iso));
 }
 

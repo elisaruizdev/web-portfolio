@@ -1,17 +1,68 @@
 import type { BlogPost, BlogPostMeta } from "../data/blog";
 import { absoluteUrl, site } from "./config";
 
+const personId = `${site.url}/#persona`;
+const serviceId = absoluteUrl("/servicios#servicio");
+
+/** Solo ciudad y región: no se publica dirección postal */
+const madridAddress = {
+  "@type": "PostalAddress",
+  addressLocality: "Madrid",
+  addressRegion: "Comunidad de Madrid",
+  addressCountry: "ES",
+};
+
+function personJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": personId,
+    name: site.name,
+    jobTitle: [site.role, site.techRole],
+    url: site.url,
+    email: site.email,
+    image: absoluteUrl(site.ogImage.path),
+    address: madridAddress,
+    knowsAbout: ["Desarrollo web", "Angular", "Vue.js", "React", "TypeScript", "Accesibilidad web"],
+    sameAs: [site.linkedin, site.github].filter(Boolean),
+  };
+}
+
+export function professionalServiceJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": serviceId,
+    name: `${site.name} — Desarrollo web`,
+    description: site.defaultDescription,
+    url: absoluteUrl("/servicios"),
+    image: absoluteUrl(site.ogImage.path),
+    email: site.email,
+    address: madridAddress,
+    areaServed: [
+      { "@type": "City", name: "Madrid" },
+      { "@type": "AdministrativeArea", name: "Comunidad de Madrid" },
+    ],
+    serviceType: ["Diseño web", "Desarrollo web", "Desarrollo de aplicaciones web"],
+    founder: { "@id": personId },
+  };
+}
+
+/** Vista de recruiters (/experiencia): perfil profesional de la persona */
+export function profilePageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: absoluteUrl("/experiencia"),
+    inLanguage: site.language,
+    mainEntity: personJsonLd(),
+  };
+}
+
 export function personAndWebsiteJsonLd() {
   return [
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: site.name,
-      jobTitle: site.role,
-      url: site.url,
-      email: site.email,
-      sameAs: [site.linkedin, site.github].filter(Boolean),
-    },
+    personJsonLd(),
+    professionalServiceJsonLd(),
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -19,6 +70,7 @@ export function personAndWebsiteJsonLd() {
       url: site.url,
       description: site.defaultDescription,
       inLanguage: site.language,
+      publisher: { "@id": personId },
     },
   ];
 }
