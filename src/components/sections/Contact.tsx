@@ -1,80 +1,75 @@
 import { FadeIn } from "../FadeIn";
+import { ContactForm } from "../ContactForm";
 
-import { site } from "../../data/site";
+import { cvDownloads, freelance, site } from "../../data/site";
 
+const mailtoProject = `mailto:${site.email}?subject=${encodeURIComponent(freelance.mailSubject)}`;
 
+type ContactProps = {
+  /** Cada vista del hero muestra solo su llamada a la acción */
+  audience: "client" | "recruiter";
+};
 
-export function Contact() {
-
+export function Contact({ audience }: ContactProps) {
   return (
-
     <section id="contacto" className="section-dark py-16 sm:py-24">
-
-      <div className="todd-wrap text-center">
-
-        <FadeIn>
-
+      <div className="todd-wrap">
+        <FadeIn className="text-center">
           <p className="todd-label text-accent">Contacto</p>
-
           <h2 className="todd-section-title mt-2">¿Hablamos?</h2>
-
-          <p className="mt-5 text-lg todd-muted max-w-lg mx-auto">
-
-            Busco equipos que valoren el cuidado del producto tanto como la velocidad.
-
-            Escríbeme — respondo en un par de días.
-
-          </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row flex-wrap justify-center gap-3">
-
-            <a href={`mailto:${site.email}`} className="btn-primary">
-
-              {site.email}
-
-            </a>
-
-            <a
-
-              href={site.linkedin}
-
-              target="_blank"
-
-              rel="noopener noreferrer"
-
-              className="btn-secondary"
-
-            >
-
-              LinkedIn
-
-            </a>
-
-            <a
-
-              href={site.github}
-
-              target="_blank"
-
-              rel="noopener noreferrer"
-
-              className="btn-secondary"
-
-            >
-
-              GitHub
-
-            </a>
-
-          </div>
-
         </FadeIn>
 
+        <FadeIn className="contact-path mt-12">
+          {audience === "client" ? (
+            <>
+              <h3 className="contact-path__title">¿Tienes un proyecto?</h3>
+              <p className="mt-3 todd-muted">
+                Cuéntame qué necesitas: una web nueva, una aplicación o mejorar la que ya tienes.
+              </p>
+              <p className="mt-3 todd-muted">{freelance.area}</p>
+              <ContactForm audience="encargo" />
+            </>
+          ) : (
+            <>
+              <h3 className="contact-path__title">¿Buscas perfil front-end?</h3>
+              <p className="mt-3 todd-muted">
+                Busco equipos que valoren el cuidado del producto tanto como la velocidad.
+              </p>
+              <ContactForm audience="recruiter" />
+              <div className="contact-path__actions contact-path__actions--secondary">
+                <a
+                  href={cvDownloads.design.href}
+                  download={cvDownloads.design.fileName}
+                  className="btn-secondary"
+                >
+                  Descargar CV
+                </a>
+                <a
+                  href={site.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href={site.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                >
+                  GitHub
+                </a>
+              </div>
+            </>
+          )}
+        </FadeIn>
+
+        <p className="mt-10 text-center todd-muted">
+          ¿Prefieres el email?{" "}
+          <a href={audience === "client" ? mailtoProject : `mailto:${site.email}`}>{site.email}</a>
+        </p>
       </div>
-
     </section>
-
   );
-
 }
-

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { absoluteUrl, site } from "../seo/config";
 
 type SeoProps = {
@@ -13,14 +13,21 @@ type SeoProps = {
   type?: "website" | "article";
 };
 
-function upsertMeta(
-  selector: string,
-  create: () => HTMLElement,
-  content: string
-) {
-  let el = document.querySelector(selector) as HTMLMetaElement | null;
+export type SeoMetaTag = { attr: "name" | "property"; key: string; content: string };
+
+export type SeoHead = { title: string; canonical: string; meta: SeoMetaTag[] };
+
+/**
+ * En el prerender (src/entry-server.tsx) recoge las etiquetas del <head> para escribirlas
+ * en el HTML estático. En el navegador no hay proveedor y se aplican con useEffect.
+ */
+export const SeoHeadContext = createContext<{ head?: SeoHead } | null>(null);
+
+function upsertMeta({ attr, key, content }: SeoMetaTag) {
+  let el = document.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
   if (!el) {
-    el = create() as HTMLMetaElement;
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
     document.head.appendChild(el);
   }
   el.setAttribute("content", content);
@@ -47,79 +54,46 @@ export function Seo({
   const url = absoluteUrl(path);
   const fullTitle =
     title === site.defaultTitle ? title : `${title} · ${site.name}`;
+  const image = absoluteUrl(site.ogImage.path);
+
+  const meta: SeoMetaTag[] = [
+    { attr: "name", key: "description", content: description },
+    {
+      attr: "name",
+      key: "robots",
+      content: noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large",
+    },
+    { attr: "property", key: "og:type", content: type },
+    { attr: "property", key: "og:site_name", content: site.name },
+    { attr: "property", key: "og:locale", content: site.locale },
+    { attr: "property", key: "og:title", content: fullTitle },
+    { attr: "property", key: "og:description", content: description },
+    { attr: "property", key: "og:url", content: url },
+    { attr: "property", key: "og:image", content: image },
+    { attr: "property", key: "og:image:width", content: String(site.ogImage.width) },
+    { attr: "property", key: "og:image:height", content: String(site.ogImage.height) },
+    { attr: "property", key: "og:image:alt", content: site.ogImage.alt },
+    { attr: "name", key: "twitter:card", content: "summary_large_image" },
+    { attr: "name", key: "twitter:title", content: fullTitle },
+    { attr: "name", key: "twitter:description", content: description },
+    { attr: "name", key: "twitter:image", content: image },
+  ];
+
+  const collector = useContext(SeoHeadContext);
+  if (collector) {
+    collector.head = { title: fullTitle, canonical: url, meta };
+  }
+
+  const metaKey = JSON.stringify(meta);
 
   useEffect(() => {
     document.title = fullTitle;
     document.documentElement.lang = site.language;
-
-    upsertMeta(
-      'meta[name="description"]',
-      () => {
-        const m = document.createElement("meta");
-        m.name = "description";
-        return m;
-      },
-      description
-    );
-
-    upsertMeta(
-      'meta[name="robots"]',
-      () => {
-        const m = document.createElement("meta");
-        m.name = "robots";
-        return m;
-      },
-      noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large"
-    );
-
+    for (const tag of JSON.parse(metaKey) as SeoMetaTag[]) {
+      upsertMeta(tag);
+    }
     upsertLink("canonical", url);
-
-    const og = (property: string, content: string) =>
-      upsertMeta(
-        `meta[property="${property}"]`,
-        () => {
-          const m = document.createElement("meta");
-          m.setAttribute("property", property);
-          return m;
-        },
-        content
-      );
-
-    og("og:type", type);
-    og("og:site_name", site.name);
-    og("og:locale", site.locale);
-    og("og:title", fullTitle);
-    og("og:description", description);
-    og("og:url", url);
-
-    upsertMeta(
-      'meta[name="twitter:card"]',
-      () => {
-        const m = document.createElement("meta");
-        m.name = "twitter:card";
-        return m;
-      },
-      "summary"
-    );
-    upsertMeta(
-      'meta[name="twitter:title"]',
-      () => {
-        const m = document.createElement("meta");
-        m.name = "twitter:title";
-        return m;
-      },
-      fullTitle
-    );
-    upsertMeta(
-      'meta[name="twitter:description"]',
-      () => {
-        const m = document.createElement("meta");
-        m.name = "twitter:description";
-        return m;
-      },
-      description
-    );
-  }, [fullTitle, description, url, noIndex, type]);
+  }, [fullTitle, url, metaKey]);
 
   if (!jsonLd) return null;
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Elisa Ruiz — programadora web front-end en Madrid. Angular, Vue, TypeScript. Sector bancario y financiero."
+      content="Desarrolladora front-end con más de 4 años en banca y fintech. Diseño y desarrollo webs para negocios en Madrid. Angular, Vue y React."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,10 +14,30 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Raleway:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>Elisa Ruiz — Programadora web front-end</title>
+    <title>Elisa Ruiz — Desarrolladora web en Madrid</title>
     <link rel="alternate" type="application/rss+xml" title="Blog RSS" href="/rss.xml" />
   </head>
   <body>
+    <!-- Netlify Forms: declaración estática de los formularios de src/components/ContactForm.tsx.
+         Netlify los detecta en el deploy; los campos deben coincidir con los del componente. -->
+    <form name="encargo" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="nombre" />
+      <input name="telefono" />
+      <input name="email" type="email" />
+      <select name="tipo"><option>-</option></select>
+      <textarea name="mensaje"></textarea>
+      <input name="consentimiento" type="checkbox" />
+    </form>
+    <form name="recruiter" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="nombre" />
+      <input name="empresa" />
+      <input name="email" type="email" />
+      <input name="puesto" />
+      <textarea name="mensaje"></textarea>
+      <input name="consentimiento" type="checkbox" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
