@@ -133,6 +133,8 @@ export type Project = {
   /** Varias capturas: en desktop se apilan a la izquierda (50 %) y se revelan al hacer scroll */
   images?: string[];
   imageAlt?: string;
+  /** Captura vertical: se muestra en un móvil superpuesto a la primera captura */
+  mobileImage?: string;
   /** Dominio que se ve en la barra del navegador que enmarca las capturas */
   browserUrl?: string;
 };
@@ -163,6 +165,7 @@ export const projects: Project[] = [
       "/projects/trivial-desarrolladores-quiz.png",
       "/projects/trivial-desarrolladores-own-questions.png",
     ],
+    mobileImage: "/projects/trivial-desarrolladores-mobile.png",
     imageAlt: "Trivial para desarrolladores — pantallas de la app",
     title: "Trivial de desarrolladores",
     description:

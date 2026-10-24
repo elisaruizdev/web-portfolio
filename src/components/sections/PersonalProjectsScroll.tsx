@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type { Project } from "../../data/site";
 import { BrowserFrame } from "../BrowserFrame";
+import { PhoneFrame } from "../PhoneFrame";
 import { ProjectDetailPanel } from "./ProjectDetailPanel";
 import { projectBrowserUrl, projectImageSources } from "./projectImages";
 
@@ -44,7 +45,12 @@ function PersonalProjectShowcase({ project }: { project: Project }) {
       <div className="project-showcase__media">
         <div className="project-showcase__stack">
           {sources.map((src, index) => (
-            <div key={src} className="project-showcase__hero">
+            <div
+              key={src}
+              className={`project-showcase__hero${
+                index === 0 && project.mobileImage ? " project-showcase__hero--with-phone" : ""
+              }`}
+            >
               <BrowserFrame url={browserUrl}>
                 <ProjectHeroImage
                   src={src}
@@ -56,6 +62,12 @@ function PersonalProjectShowcase({ project }: { project: Project }) {
                   title={project.title}
                 />
               </BrowserFrame>
+              {index === 0 && project.mobileImage ? (
+                <PhoneFrame
+                  src={project.mobileImage}
+                  alt={`${project.title} en móvil`}
+                />
+              ) : null}
             </div>
           ))}
         </div>
