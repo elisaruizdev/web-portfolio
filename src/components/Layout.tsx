@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { CvNavMenu } from "./CvNavMenu";
+import { CookieBanner, openCookieSettings } from "./CookieBanner";
 import { site } from "../data/site";
+import { analyticsEnabled } from "../utils/analytics";
 
 
 
@@ -240,10 +242,20 @@ export function Layout() {
         <p className="todd-wrap-wide">
 
           © {new Date().getFullYear()} {site.name} · Madrid · React + Vite
+          {analyticsEnabled && (
+            <>
+              {" · "}
+              <button type="button" className="site-footer__cookies" onClick={openCookieSettings}>
+                Cookies
+              </button>
+            </>
+          )}
 
         </p>
 
       </footer>
+
+      <CookieBanner />
 
     </div>
 
