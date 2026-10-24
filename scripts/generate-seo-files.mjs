@@ -28,7 +28,7 @@ function readSiteUrlFromEnvFiles() {
 const siteUrl = (
   process.env.VITE_SITE_URL ??
   readSiteUrlFromEnvFiles() ??
-  "https://tu-dominio.com"
+  "https://elisaruiz.netlify.app"
 ).replace(/\/$/, "");
 
 const blogSrc = readFileSync(resolve(root, "src/data/blog.ts"), "utf-8");

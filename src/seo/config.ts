@@ -2,7 +2,7 @@ import { site as siteData } from "../data/site";
 
 /** URL pública del sitio (sin barra final). Configura VITE_SITE_URL en producción. */
 export const siteUrl = (
-  import.meta.env.VITE_SITE_URL ?? "https://tu-dominio.com"
+  import.meta.env.VITE_SITE_URL ?? "https://elisaruiz.netlify.app"
 ).replace(/\/$/, "");
 
 export const site = {

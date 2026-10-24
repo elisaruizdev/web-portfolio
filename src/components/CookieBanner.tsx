@@ -34,7 +34,8 @@ export function CookieBanner() {
     <div className="cookie-banner" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
       <p className="cookie-banner__text">
         Uso Google Analytics para saber cuántas personas visitan el portfolio y desde dónde llegan.
-        Solo se activa si aceptas.
+        Usa cookies y solo se activa si aceptas. Aparte, Cloudflare Web Analytics cuenta las visitas
+        de forma anónima y sin cookies.
       </p>
       <div className="cookie-banner__actions">
         <button
