@@ -1,5 +1,4 @@
 import { FadeIn } from "../FadeIn";
-import { ContactForm } from "../ContactForm";
 
 import { cvDownloads, site } from "../../data/site";
 
@@ -17,7 +16,14 @@ export function Contact() {
           <p className="mt-3 todd-muted">
             Busco equipos que valoren el cuidado del producto tanto como la velocidad.
           </p>
-          <ContactForm />
+          <div className="contact-path__actions">
+            <a href={`mailto:${site.email}`} className="btn-primary">
+              Escríbeme un email
+            </a>
+          </div>
+          <p className="mt-3 todd-muted">
+            O copia mi dirección: <a href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
           <div className="contact-path__actions contact-path__actions--secondary">
             <a
               href={cvDownloads.design.href}
@@ -44,10 +50,6 @@ export function Contact() {
             </a>
           </div>
         </FadeIn>
-
-        <p className="mt-10 text-center todd-muted">
-          ¿Prefieres el email? <a href={`mailto:${site.email}`}>{site.email}</a>
-        </p>
       </div>
     </section>
   );
