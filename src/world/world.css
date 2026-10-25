@@ -31,6 +31,15 @@
   color: var(--world-ink);
 }
 
+/* El documento entero va de noche: el rebote del scroll y las barras no asoman en blanco */
+html:has(.layout--night) {
+  --scrollbar-track: var(--world-bg);
+  --scrollbar-thumb: linear-gradient(180deg, #ff2a8a, #b44cff 55%, #4de7ff);
+  --scrollbar-thumb-flat: #b44cff;
+  --scrollbar-thumb-glow: inset 0 0 6px rgb(255 255 255 / 0.25);
+  background: var(--world-bg);
+}
+
 .world-surface {
   position: relative;
   isolation: isolate;
@@ -532,7 +541,7 @@
 
 /* El panel del menú es blanco por defecto: de noche va oscuro para que se lea el texto claro */
 .site-header--night .site-header__actions {
-  background: color-mix(in srgb, var(--world-bg) 92%, transparent);
+  background: color-mix(in srgb, var(--world-bg) 97%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-color: var(--world-line);
