@@ -8,13 +8,11 @@ import { analyticsEnabled } from "../utils/analytics";
 
 
 const navLinks = [
-  { label: "Servicios", href: "/servicios" },
-  { label: "Experiencia", href: "/experiencia" },
+  { label: "Trayectoria", href: "/#experiencia" },
+  { label: "Proyectos", href: "/#proyectos" },
+  { label: "Contacto", href: "/#contacto" },
   { label: "Blog", href: "/blog" },
 ];
-
-/** Rutas que comparten el hero de la home: la elección y sus dos vistas */
-const landingPaths = new Set(["/", "/servicios", "/experiencia"]);
 
 function scrollToSection(id: string) {
   const target = document.getElementById(id);
@@ -30,10 +28,8 @@ export function Layout() {
   const location = useLocation();
   const previousPath = useRef(location.pathname);
 
-  const isLanding = landingPaths.has(location.pathname);
-  // La cabecera (nombre, enlaces, CV y redes) es para recruiters: solo en su vista y en el blog
-  const showHeader = location.pathname === "/experiencia" || location.pathname.startsWith("/blog");
-  const [showHeaderBrand, setShowHeaderBrand] = useState(!isLanding);
+  // La home es el mundo 3D de noche; el blog sigue en claro
+  const isLanding = location.pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -49,32 +45,15 @@ export function Layout() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
 
-  useEffect(() => {
-    if (!isLanding) {
-      setShowHeaderBrand(true);
-      return;
-    }
-
-    const update = () => {
-      setShowHeaderBrand(window.scrollY > 64);
-    };
-
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, [isLanding]);
-
-  // Al cambiar de página se vuelve arriba; la elección del hero (state.keepScroll) mantiene
-  // la posición para que el contenido aparezca justo debajo
+  // Al cambiar de página se vuelve arriba (en los mundos, al inicio del recorrido)
   useEffect(() => {
     const changed = previousPath.current !== location.pathname;
     previousPath.current = location.pathname;
-    const keepScroll = (location.state as { keepScroll?: boolean } | null)?.keepScroll;
-    if (!changed || location.hash || keepScroll) {
+    if (!changed || location.hash) {
       return;
     }
     window.scrollTo({ top: 0, left: 0 });
-  }, [location.pathname, location.hash, location.state]);
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     if (!isLanding || !location.hash) {
@@ -84,29 +63,16 @@ export function Layout() {
     return () => cancelAnimationFrame(frame);
   }, [isLanding, location.hash, location.key]);
 
-  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (location.pathname !== "/" || location.hash) {
-      return;
-    }
-    event.preventDefault();
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  };
-
   return (
     <div
-      className={`min-h-screen flex flex-col ${isLanding ? "bg-transparent" : "bg-white"}${showHeader ? "" : " layout--no-header"}`}
+      className={`min-h-screen flex flex-col ${isLanding ? "layout--night" : "bg-white"}`}
     >
 
-      {showHeader && (
-      <header className="site-header sticky top-0 z-50">
+      <header className={`site-header sticky top-0 z-50${isLanding ? " site-header--night" : ""}`}>
 
         <div className="todd-wrap-wide site-header__inner flex min-h-14 sm:min-h-[4.25rem] py-2 items-center justify-between gap-3 sm:gap-4">
 
-          <Link
-            to="/"
-            onClick={handleBrandClick}
-            className={`site-brand shrink-0 ${isLanding && !showHeaderBrand ? "site-brand--home-hero" : ""}`}
-          >
+          <Link to="/" className="site-brand shrink-0">
             <span className="site-brand__name">{site.name}</span>
             <span className="site-brand__role">{site.role}</span>
           </Link>
@@ -136,7 +102,7 @@ export function Layout() {
 
             {navLinks.map((link) => {
 
-              const active = location.pathname.startsWith(link.href);
+              const active = !link.href.includes("#") && location.pathname.startsWith(link.href);
 
               return (
 
@@ -194,7 +160,6 @@ export function Layout() {
         </div>
 
       </header>
-      )}
 
       <main className={`flex-1 ${isLanding ? "bg-transparent" : "bg-white"}`}>
 
@@ -203,7 +168,7 @@ export function Layout() {
       </main>
 
       <footer
-        className={`site-footer py-10 text-center text-sm todd-muted ${isLanding ? "bg-transparent" : ""}`}
+        className={`site-footer py-10 text-center text-sm todd-muted ${isLanding ? "site-footer--night" : ""}`}
       >
 
         <p className="todd-wrap-wide">

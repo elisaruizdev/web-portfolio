@@ -8,8 +8,8 @@ export const siteUrl = (
 export const site = {
   ...siteData,
   url: siteUrl,
-  defaultTitle: `${siteData.name} — ${siteData.role} en ${siteData.location}`,
-  defaultDescription: `Desarrolladora front-end con más de ${siteData.yearsExperience} años en banca y fintech. Diseño y desarrollo webs para negocios en Madrid. Angular, Vue y React.`,
+  defaultTitle: `${siteData.name} — ${siteData.techRole} en ${siteData.location}`,
+  defaultDescription: `Portfolio de ${siteData.name}, ${siteData.techRole} con más de ${siteData.yearsExperience} años en banca y fintech: Angular, Vue y TypeScript. Trayectoria, proyectos y CV descargable.`,
   locale: "es_ES",
   language: "es",
   /** Imagen para compartir en redes (1200×630, en /public) */

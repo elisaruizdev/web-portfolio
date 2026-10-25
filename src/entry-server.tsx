@@ -7,8 +7,6 @@ import { blogPosts } from "./data/blog";
 /** Rutas que se generan como HTML estático en el build */
 export const routes = [
   "/",
-  "/servicios",
-  "/experiencia",
   "/blog",
   ...blogPosts.map((post) => `/blog/${post.slug}`),
 ];

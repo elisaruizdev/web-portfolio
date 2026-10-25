@@ -28,21 +28,6 @@ export const site = {
   availability: "Abierta a nuevas oportunidades",
 } as const;
 
-/** Lo que un recruiter suele buscar en los primeros segundos */
-export const recruiterHighlights = {
-  pitchIntro: "Más de 4 años de experiencia en sector Fintech",
-  pitchTags: [
-    "Angular & Vue",
-    "TypeScript",
-    "IA con supervisión de código",
-  ] as const,
-  employer: "Zeeker Solutions",
-  employerSince: "2022",
-  location: site.location,
-  availability: site.availability,
-  stack: ["Angular (v15+)", "Vue.js", "TypeScript", "SCSS", "Playwright"],
-} as const;
-
 export const credibilityStats = [
   {
     value: `${site.yearsExperience}+`,
@@ -62,24 +47,6 @@ export const credibilityStats = [
   },
 ] as const;
 
-export const serviceTags = [
-  "angular",
-  "vue",
-  "typescript",
-  "scss",
-  "playwright",
-  "figma",
-  "postman",
-  "azure",
-  "slack",
-  "jira",
-  "git",
-  "claude",
-  "cursor",
-  "angular-material",
-  "bootstrap",
-] as const;
-
 export const hero = {
   titleLine1: "No es solo desarrollar",
   titleLine2: "es cuidar el detalle",
@@ -89,55 +56,6 @@ export const hero = {
   subheadline:
     "Software engineer con experiencia desde 2022 en proyectos bancarios y financieros. Angular, Vue, TypeScript y SCSS — con obsesión sana por los fallos que aparecen cuando nadie ha probado «el otro camino».",
 } as const;
-
-/** Elección del hero: cada opción es una vista con su propia URL */
-export const audienceChoice = {
-  intro: `En ${site.location}, con más de ${site.yearsExperience} años creando webs y aplicaciones.`,
-  prompt: "¿Qué te trae por aquí?",
-  client: {
-    label: "Necesito una web",
-    hint: "Webs para negocios, aplicaciones a medida o mejorar la que ya tienes.",
-    href: "/servicios",
-  },
-  recruiter: {
-    label: "Soy recruiter",
-    hint: `Experiencia, proyectos y CV como ${site.techRole}.`,
-    href: "/experiencia",
-  },
-} as const;
-
-/** Encargos freelance: vista /servicios */
-export const freelance = {
-  title: "¿Necesitas una web? Hablemos",
-  intro: `Soy ${site.name}, desarrolladora front-end en Madrid con más de ${site.yearsExperience} años creando webs y aplicaciones en producción para banca y fintech. Además de mi trabajo, acepto proyectos por encargo: cuéntame qué necesitas y vemos cómo hacerlo.`,
-  examples: [
-    {
-      title: "Una web para tu negocio",
-      description:
-        "Web corporativa o landing: rápida, adaptada a móvil y preparada para que te encuentren en Google.",
-    },
-    {
-      title: "Una aplicación a medida",
-      description:
-        "Áreas privadas con login, paneles de gestión o formularios con lógica propia.",
-    },
-    {
-      title: "Mejorar la web que ya tienes",
-      description:
-        "Rediseño, rendimiento, accesibilidad y corrección de errores, sin empezar de cero.",
-    },
-  ],
-  reasons: [
-    "Experiencia en producción: webs y backoffices para una financiera y un neobanco.",
-    "Accesibilidad de serie: la trabajo a diario y la verifico con pruebas automatizadas con Playwright.",
-    "Detalle antes de entregar: reviso los casos raros, no solo el camino feliz.",
-  ],
-  area: "Con base en Madrid. Trabajo con negocios de toda la Comunidad de Madrid, en persona o en remoto, y en remoto con el resto de España.",
-  mailSubject: "Proyecto web",
-} as const;
-
-export const about =
-  "Desarrollo con Cursor, Claude Code y agentes de IA para iterar más rápido; reviso, pruebo y corrijo el código que generan antes de darlo por bueno. Sigo formándome y destaco por ser detallista y meticulosa, sobre todo al buscar posibles fallos y las distintas casuísticas de cada aplicación.";
 
 export const strengths = [
   {

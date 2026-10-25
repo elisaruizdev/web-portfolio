@@ -4,3 +4,16 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Las antiguas vistas de encargos y recruiters ahora viven en la home
+[[redirects]]
+  from = "/servicios"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/experiencia"
+  to = "/"
+  status = 301
+  force = true
