@@ -86,9 +86,9 @@ The site is deployed on **Netlify** using the configuration in [`netlify.toml`](
 - Build command: `npm run build`
 - Publish directory: `dist`
 
-Each route is served from its prerendered file (`servicios.html`, `blog/<slug>.html`…); unknown URLs get `404.html` with a real 404 status. On Vercel, `vercel.json` enables `cleanUrls` so `/servicios` maps to `servicios.html`. New routes must be added to `routes` in [`src/entry-server.tsx`](src/entry-server.tsx).
+Each route is served from its prerendered file (`index.html`, `blog.html`, `blog/<slug>.html`…); unknown URLs get `404.html` with a real 404 status. On Vercel, `vercel.json` enables `cleanUrls` so `/blog` maps to `blog.html`. The old `/servicios` and `/experiencia` views now live on the home page and redirect there with a 301 (`netlify.toml` and `vercel.json`). New routes must be added to `routes` in [`src/entry-server.tsx`](src/entry-server.tsx).
 
-The contact forms (`encargo` for clients, `recruiter` for recruiters) use **Netlify Forms**. They are declared as hidden static forms in [`index.html`](index.html) so Netlify can detect them at deploy time; their fields must match [`src/components/ContactForm.tsx`](src/components/ContactForm.tsx). Form detection and email notifications are enabled in the Netlify dashboard (Forms).
+The contact form (`recruiter`) uses **Netlify Forms**. It is declared as a hidden static form in [`index.html`](index.html) so Netlify can detect it at deploy time; their fields must match [`src/components/ContactForm.tsx`](src/components/ContactForm.tsx). Form detection and email notifications are enabled in the Netlify dashboard (Forms).
 
 ## Contact
 

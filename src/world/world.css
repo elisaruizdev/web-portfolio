@@ -1,0 +1,585 @@
+/* Mundo de neón de la home: el recorrido 3D del portfolio y el contenido de debajo */
+
+:root {
+  --world-bg: #07031a;
+  --world-ink: #f6f0ff;
+  --world-title: #ffffff;
+  --world-muted: rgb(236 226 255 / 0.78);
+  --world-glass: rgb(16 8 42 / 0.68);
+  --world-line: rgb(255 255 255 / 0.13);
+  --world-accent: #ff8ad4;
+  --world-tag: #4de7ff;
+  --world-cta: #e0006b;
+  --world-cta-ink: #ffffff;
+  --world-cta-glow: 0 0 26px -4px rgb(255 42 138 / 0.75);
+  --world-bar: linear-gradient(90deg, #ff2a8a, #b44cff, #4de7ff);
+  --world-bar-glow: 0 0 14px rgb(255 42 138 / 0.7);
+  --world-dot: #ff2a8a;
+  --world-dot-glow: 0 0 12px #ff2a8a;
+  --world-radius: 20px;
+  --world-card-blur: blur(14px) saturate(1.2);
+  --world-card-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.85), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  --world-font-title: var(--font-display);
+  --world-font-label: var(--font-display);
+  --world-title-weight: 800;
+  --world-title-spacing: -0.02em;
+  --world-gutter: max(1rem, 5vw);
+}
+
+.layout--night {
+  background: var(--world-bg);
+  color: var(--world-ink);
+}
+
+.world-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ——— Fondo 3D ——— */
+
+.world-scene {
+  position: fixed;
+  inset: 0;
+  /* iOS: cubrir el viewport grande cuando la barra del navegador se oculta */
+  bottom: auto;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--world-bg);
+}
+
+/* Lo que se ve en el prerender, sin WebGL o mientras carga la escena: el mismo horizonte en CSS */
+.world-scene__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 38% at 50% 52%, rgb(255 42 138 / 0.34), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgb(180 76 255 / 0.18), transparent 70%),
+    var(--world-bg);
+  overflow: hidden;
+}
+
+.world-scene__fallback::after {
+  content: "";
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  top: 55%;
+  height: 90%;
+  background-image:
+    linear-gradient(rgb(255 42 138 / 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(91 43 189 / 0.6) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(380px) rotateX(62deg);
+  transform-origin: top center;
+  mask-image: linear-gradient(transparent, #000 35%);
+}
+
+.world-scene__canvas {
+  position: absolute !important;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.world-scene--ready .world-scene__canvas {
+  opacity: 1;
+}
+
+/* WorldJourney la oscurece cuando sube el contenido de debajo */
+.world-scene__shade {
+  position: absolute;
+  inset: 0;
+  background: var(--world-bg);
+  opacity: 0;
+}
+
+/* ——— Recorrido ——— */
+
+.world-journey {
+  position: relative;
+}
+
+.world-journey__stop {
+  height: calc(var(--stop-scroll, 1.6) * 100vh);
+  height: calc(var(--stop-scroll, 1.6) * 100svh);
+}
+
+.world-cards {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.world-card {
+  --reveal: 0;
+  position: absolute;
+  top: calc(50% + var(--site-header-height) / 2);
+  width: min(31rem, 40vw);
+  box-sizing: border-box;
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  border-radius: var(--world-radius);
+  border: 1px solid var(--world-line);
+  background: var(--world-glass);
+  backdrop-filter: var(--world-card-blur);
+  -webkit-backdrop-filter: var(--world-card-blur);
+  box-shadow: var(--world-card-shadow);
+  color: var(--world-ink);
+  opacity: var(--reveal);
+  transform: translateY(calc(-50% + (1 - var(--reveal)) * 28px));
+  pointer-events: auto;
+  visibility: hidden;
+}
+
+/* La primera parada saluda al entrar; el resto espera a que la cámara llegue (lo gestiona JS) */
+.world-card:first-child {
+  --reveal: 1;
+  visibility: visible;
+}
+
+.world-card[data-hidden="false"] {
+  visibility: visible;
+}
+
+.world-card[data-hidden="true"] {
+  visibility: hidden;
+}
+
+.world-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--world-bar);
+  box-shadow: var(--world-bar-glow);
+}
+
+.world-card--left {
+  left: var(--world-gutter);
+}
+
+.world-card--right {
+  right: max(4.5rem, 7vw);
+}
+
+.world-card__eyebrow {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  font-family: var(--world-font-label);
+  font-weight: 800;
+  font-size: 0.74rem;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--world-accent);
+}
+
+.world-card__step {
+  color: var(--world-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.world-card__title {
+  margin: 0.7rem 0 0;
+  font-family: var(--world-font-title);
+  font-weight: var(--world-title-weight);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: var(--world-title-spacing);
+  text-wrap: balance;
+  color: var(--world-title);
+}
+
+.world-card__body {
+  margin: 0.9rem 0 0;
+  color: var(--world-muted);
+  font-size: 1.04rem;
+  line-height: 1.6;
+}
+
+.world-card__tags {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.world-card__tags li {
+  padding: 0.3rem 0.72rem;
+  border-radius: max(var(--world-radius), 2px);
+  border: 1px solid color-mix(in srgb, var(--world-tag) 45%, transparent);
+  background: color-mix(in srgb, var(--world-tag) 8%, transparent);
+  color: var(--world-tag);
+  font-family: var(--world-font-label);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.world-card__stats {
+  margin: 1.25rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1.25rem;
+}
+
+.world-card__stat {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-left: 0.75rem;
+  border-left: 2px solid color-mix(in srgb, var(--world-accent) 70%, transparent);
+}
+
+.world-card__stat dd {
+  margin: 0;
+  font-family: var(--world-font-title);
+  font-weight: var(--world-title-weight);
+  font-size: 1.3rem;
+  line-height: 1.1;
+  color: var(--world-title);
+}
+
+.world-card__stat dt {
+  margin-top: 0.2rem;
+  color: var(--world-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.world-card__actions {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.world-card .btn-primary {
+  background: var(--world-cta);
+  color: var(--world-cta-ink);
+  box-shadow: var(--world-cta-glow);
+}
+
+.world-card .btn-primary,
+.world-card .btn-secondary {
+  border-radius: max(calc(var(--world-radius) / 2), 2px);
+}
+
+.world-card .btn-secondary {
+  color: var(--world-ink);
+  border-color: color-mix(in srgb, var(--world-ink) 45%, transparent);
+}
+
+.world-card .btn-secondary:hover {
+  background: color-mix(in srgb, var(--world-ink) 8%, transparent);
+}
+
+/* Raíl de paradas */
+.world-rail {
+  position: fixed;
+  right: 1.25rem;
+  top: calc(50% + var(--site-header-height) / 2);
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.world-rail {
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s;
+}
+
+.world-journey[data-ended] .world-rail {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.world-rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.world-rail a {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.2rem;
+  color: var(--world-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.world-rail__dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--world-ink) 55%, transparent);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.world-rail a[aria-current] .world-rail__dot {
+  background: var(--world-dot);
+  border-color: var(--world-dot);
+  box-shadow: var(--world-dot-glow);
+}
+
+.world-rail__label {
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: var(--world-glass);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.world-rail a:hover .world-rail__label,
+.world-rail a:focus-visible .world-rail__label {
+  opacity: 1;
+  transform: none;
+}
+
+.world-rail a:hover,
+.world-rail a:focus-visible {
+  color: var(--world-ink);
+  text-decoration: none;
+}
+
+.world-journey__hint {
+  position: fixed;
+  left: 50%;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  z-index: 2;
+  margin: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--world-muted);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.world-journey__hint::after {
+  content: "";
+  width: 1px;
+  height: 2.25rem;
+  background: linear-gradient(var(--world-dot), transparent);
+  animation: world-hint 1.8s ease-in-out infinite;
+  transform-origin: top;
+}
+
+.world-journey[data-started] .world-journey__hint {
+  opacity: 0;
+}
+
+@keyframes world-hint {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 859px) {
+  .world-card,
+  .world-card--left,
+  .world-card--right {
+    top: auto;
+    left: 1rem;
+    right: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: 60svh;
+    overflow-y: auto;
+    padding: 1.15rem 1.2rem 1.25rem;
+    transform: translateY(calc((1 - var(--reveal)) * 24px));
+  }
+
+  .world-card__title {
+    font-size: clamp(1.4rem, 6.2vw, 1.9rem);
+  }
+
+  .world-card__body {
+    font-size: 0.96rem;
+  }
+
+  .world-card__stats {
+    gap: 0.6rem 0.9rem;
+  }
+
+  .world-card__stat dd {
+    font-size: 1.1rem;
+  }
+
+  .world-rail {
+    top: calc(var(--site-header-height) + 0.75rem);
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .world-rail ol {
+    flex-direction: row;
+    gap: 0.35rem;
+  }
+
+  .world-rail__label {
+    display: none;
+  }
+
+  .world-journey__hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-card {
+    transform: translateY(-50%);
+  }
+
+  .world-scene__canvas {
+    transition: none;
+  }
+
+  .world-journey__hint::after {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 859px) {
+  .world-card,
+  .world-card--left,
+  .world-card--right {
+    transform: none;
+  }
+}
+
+/* ——— Cabecera y pie sobre el mundo ——— */
+
+.site-header--night {
+  background: color-mix(in srgb, var(--world-bg) 60%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--world-line);
+}
+
+.site-header--night .site-brand__name,
+.site-header--night nav a.text-ink,
+.site-header--night nav button.text-ink {
+  color: var(--world-title);
+}
+
+.site-header--night .site-brand__role,
+.site-header--night nav a,
+.site-header--night nav button {
+  color: var(--world-muted);
+}
+
+.site-header--night nav a:hover,
+.site-header--night nav button:hover {
+  color: var(--world-title);
+}
+
+.site-header--night .site-header__social-link {
+  color: var(--world-muted);
+}
+
+.site-footer--night {
+  background: var(--world-bg);
+  border-top-color: var(--world-line);
+}
+
+.site-footer--night,
+.site-footer--night.todd-muted {
+  color: var(--world-muted);
+}
+
+/* ——— Contenido de detalle bajo el recorrido ——— */
+
+.world-after {
+  --landing-ink: var(--world-ink);
+  --color-ink: var(--world-ink);
+  --color-muted: var(--world-muted);
+  --color-border: var(--world-line);
+  --color-surface-elevated: var(--world-glass);
+  position: relative;
+  z-index: 1;
+  color: var(--world-ink);
+  background: linear-gradient(transparent, color-mix(in srgb, var(--world-bg) 70%, transparent) 16rem);
+}
+
+.world-after .section-light {
+  color: var(--world-ink);
+}
+
+.world-after .section-bg-projects .todd-muted,
+.world-after .section-light .todd-muted {
+  color: var(--world-muted);
+}
+
+.world-after .todd-label.text-accent {
+  color: var(--world-accent);
+}
+
+.world-after .project-showcase__tag-logo {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.world-after .project-showcase__links a:first-child {
+  background: var(--world-title);
+  color: var(--world-bg);
+}
+
+.world-after .project-showcase__links a:first-child:hover {
+  background: var(--world-accent);
+}
+
+.world-after .project-showcase__links a:not(:first-child):hover {
+  background: color-mix(in srgb, var(--world-ink) 8%, transparent);
+}
+
+.world-after .todd-card {
+  background: var(--color-surface-elevated);
+  border-color: var(--color-border);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+}
+
+.world-after .todd-card:hover {
+  border-color: color-mix(in srgb, var(--world-accent) 60%, transparent);
+  box-shadow: 0 0 30px -10px color-mix(in srgb, var(--world-accent) 60%, transparent);
+}
