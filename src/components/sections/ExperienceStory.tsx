@@ -1,5 +1,3 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-
 import {
   experience,
   type ExperienceProject,
@@ -9,8 +7,6 @@ import {
 import { highlightText } from "../../utils/highlightText";
 import { ExperienceDailyStack } from "./ExperienceDailyStack";
 
-const DESKTOP_MIN = 960;
-const PIN_STEP_VH = 100;
 const VISIBLE_SECTORS: ExperienceSector[] = ["financiero", "bancario"];
 
 function groupProjects(projects: ExperienceProject[]) {
@@ -178,146 +174,15 @@ function SectorChapter({
   );
 }
 
+/** Los capítulos de la experiencia van uno debajo de otro en todos los tamaños */
 export function ExperienceStory() {
-  const pinRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  // false también en el navegador para que la hidratación coincida con el prerender; el efecto lo ajusta
-  const [stackEnabled, setStackEnabled] = useState(false);
-  const [stackShown, setStackShown] = useState(false);
-  const stackShownRef = useRef(false);
-  const transformRef = useRef("translate3d(0,0,0)");
-
   const zeeker = experience.find((job) => job.projects && job.projects.length > 0);
   const sectors = zeeker?.projects ? groupProjects(zeeker.projects) : [];
-  const slideCount = 1 + sectors.length + 1;
-
-  useEffect(() => {
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updateMode = () => {
-      const desktop = window.innerWidth >= DESKTOP_MIN && !motion.matches;
-      setStackEnabled(desktop);
-      if (!desktop) {
-        stackShownRef.current = false;
-        setStackShown(false);
-      }
-    };
-
-    updateMode();
-    window.addEventListener("resize", updateMode);
-    motion.addEventListener("change", updateMode);
-    return () => {
-      window.removeEventListener("resize", updateMode);
-      motion.removeEventListener("change", updateMode);
-    };
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!stackEnabled) {
-      return;
-    }
-
-    const pin = pinRef.current;
-    const track = trackRef.current;
-    if (!pin || !track) {
-      return;
-    }
-
-    const sticky = pin.querySelector<HTMLElement>(".experience-story");
-    let frame = 0;
-    let stickyTop = 0;
-    let range = 1;
-    let distance = 0;
-
-    const measure = () => {
-      const viewport = document.documentElement.clientWidth;
-      if (sticky) {
-        const nextWidth = `${viewport}px`;
-        const targetMargin = -pin.getBoundingClientRect().left;
-        const currentMargin = Number.parseFloat(sticky.style.marginLeft);
-        if (sticky.style.width !== nextWidth) {
-          sticky.style.width = nextWidth;
-        }
-        if (!Number.isFinite(currentMargin) || Math.abs(currentMargin - targetMargin) > 0.5) {
-          sticky.style.marginLeft = `${targetMargin}px`;
-        }
-      }
-      stickyTop = sticky ? Number.parseFloat(getComputedStyle(sticky).top) || 0 : 0;
-      range = Math.max(1, pin.offsetHeight - (window.innerHeight - stickyTop));
-      const slideWidth = sticky?.clientWidth ?? viewport;
-      distance = slideWidth * Math.max(0, slideCount - 1);
-    };
-
-    const onResize = () => {
-      measure();
-      requestApply();
-    };
-
-    const apply = () => {
-      frame = 0;
-      const scrolled = stickyTop - pin.getBoundingClientRect().top;
-      const progress = Math.min(1, Math.max(0, scrolled / range));
-      transformRef.current = `translate3d(${-progress * distance}px,0,0)`;
-      track.style.transform = transformRef.current;
-
-      if (!stackShownRef.current && slideCount > 1 && progress >= (slideCount - 1.2) / (slideCount - 1)) {
-        stackShownRef.current = true;
-        setStackShown(true);
-      }
-    };
-
-    const requestApply = () => {
-      if (frame) {
-        return;
-      }
-      frame = requestAnimationFrame(apply);
-    };
-
-    measure();
-    apply();
-
-    const resizeObserver = new ResizeObserver(onResize);
-    resizeObserver.observe(pin);
-
-    window.addEventListener("scroll", requestApply, { passive: true });
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      window.removeEventListener("scroll", requestApply);
-      window.removeEventListener("resize", onResize);
-      track.style.transform = "";
-      if (sticky) {
-        sticky.style.width = "";
-        sticky.style.marginLeft = "";
-      }
-    };
-  }, [stackEnabled, slideCount]);
-
-  useLayoutEffect(() => {
-    if (!stackEnabled || !trackRef.current) {
-      return;
-    }
-    trackRef.current.style.transform = transformRef.current;
-  });
-
-  const pinHeightVh = stackEnabled ? slideCount * PIN_STEP_VH : undefined;
 
   return (
-    <div
-      ref={pinRef}
-      className={`experience-story-pin${stackEnabled ? " experience-story-pin--active" : ""}`}
-      style={
-        {
-          "--story-slides": String(slideCount),
-          ...(pinHeightVh != null ? { "--story-pin-height": `${pinHeightVh}svh` } : {}),
-        } as CSSProperties
-      }
-    >
-      <div
-        className={`experience-story${stackEnabled ? " experience-story--pinned" : " experience-story--static"}`}
-      >
-        <div ref={trackRef} className="experience-story__track">
+    <div className="experience-story-pin">
+      <div className="experience-story experience-story--static">
+        <div className="experience-story__track">
           <section className="experience-story__slide experience-story__slide--title">
             <StoryHeading />
           </section>
@@ -332,7 +197,7 @@ export function ExperienceStory() {
           ))}
 
           <section className="experience-story__slide experience-story__slide--stack">
-            <ExperienceDailyStack appear={!stackEnabled || stackShown} />
+            <ExperienceDailyStack />
           </section>
         </div>
       </div>

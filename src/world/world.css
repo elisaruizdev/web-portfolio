@@ -31,6 +31,15 @@
   color: var(--world-ink);
 }
 
+/* El documento entero va de noche: el rebote del scroll y las barras no asoman en blanco */
+html:has(.layout--night) {
+  --scrollbar-track: var(--world-bg);
+  --scrollbar-thumb: linear-gradient(180deg, #ff2a8a, #b44cff 55%, #4de7ff);
+  --scrollbar-thumb-flat: #b44cff;
+  --scrollbar-thumb-glow: inset 0 0 6px rgb(255 255 255 / 0.25);
+  background: var(--world-bg);
+}
+
 .world-surface {
   position: relative;
   isolation: isolate;
@@ -517,6 +526,41 @@
   color: var(--world-muted);
 }
 
+.site-header--night .site-header__social-link:hover {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--world-title);
+}
+
+.site-header--night .site-header__social {
+  border-color: var(--world-line);
+}
+
+.site-header--night .site-header__burger {
+  color: var(--world-title);
+}
+
+/* El panel del menú es blanco por defecto: de noche va oscuro para que se lea el texto claro */
+.site-header--night .site-header__actions {
+  background: color-mix(in srgb, var(--world-bg) 97%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-color: var(--world-line);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 0.4);
+}
+
+.site-header--night .cv-nav-menu [role="menu"] {
+  background: transparent;
+}
+
+.site-header--night .cv-nav-menu [role="menu"] a {
+  color: var(--world-ink);
+}
+
+.site-header--night .cv-nav-menu [role="menu"] a:hover {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--world-title);
+}
+
 .site-footer--night {
   background: var(--world-bg);
   border-top-color: var(--world-line);
@@ -552,6 +596,13 @@
 
 .world-after .todd-label.text-accent {
   color: var(--world-accent);
+}
+
+/* .chip es cian claro con texto --color-ink, que aquí es claro: en el mundo van como los tags de las tarjetas */
+.world-after .chip {
+  border: 1px solid color-mix(in srgb, var(--world-tag) 45%, transparent);
+  background: color-mix(in srgb, var(--world-tag) 8%, transparent);
+  color: var(--world-tag);
 }
 
 .world-after .project-showcase__tag-logo {

@@ -31,6 +31,7 @@ export function Layout() {
   // La home es el mundo 3D de noche; el blog sigue en claro
   const isLanding = location.pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -41,8 +42,15 @@ export function Layout() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false);
     };
+    const onPointerDown = (event: MouseEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setMenuOpen(false);
+    };
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onPointerDown);
+    };
   }, [menuOpen]);
 
   // Al cambiar de página se vuelve arriba (en los mundos, al inicio del recorrido)
@@ -68,7 +76,7 @@ export function Layout() {
       className={`min-h-screen flex flex-col ${isLanding ? "layout--night" : "bg-white"}`}
     >
 
-      <header className={`site-header sticky top-0 z-50${isLanding ? " site-header--night" : ""}`}>
+      <header ref={headerRef} className={`site-header sticky top-0 z-50${isLanding ? " site-header--night" : ""}`}>
 
         <div className="todd-wrap-wide site-header__inner flex min-h-14 sm:min-h-[4.25rem] py-2 items-center justify-between gap-3 sm:gap-4">
 

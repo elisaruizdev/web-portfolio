@@ -35,7 +35,7 @@ export function Experience() {
                 <li key={item.title + item.period} className="experience-education__item">
                   <p className="todd-label experience-education__period">{item.period}</p>
                   <p className="experience-education__title">{item.title}</p>
-                  <p className="todd-muted experience-education__school">{item.institution}</p>
+                  <p className="experience-education__school">{item.institution}</p>
                 </li>
               ))}
             </ul>

@@ -2,13 +2,9 @@ import type { CSSProperties } from "react";
 
 import { skills } from "../../data/site";
 
-type ExperienceDailyStackProps = {
-  appear?: boolean;
-};
-
-export function ExperienceDailyStack({ appear = true }: ExperienceDailyStackProps) {
+export function ExperienceDailyStack() {
   return (
-    <div className={`experience-daily-stack${appear ? " experience-daily-stack--appear" : ""}`}>
+    <div className="experience-daily-stack experience-daily-stack--appear">
       <div className="experience-daily-stack__inner">
         <h3 className="display-band-title experience-daily-stack__title">
           <span className="experience-daily-stack__title-line">Stack del</span>
